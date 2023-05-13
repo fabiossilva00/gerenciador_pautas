@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS pauta (
     id SERIAL PRIMARY KEY,
-    associado_id BIGINT,
+    associado_id BIGINT NOT NULL,
     nome VARCHAR(50) NOT NULL,
-    descricao VARCHAR(254) NOT NULL
+    descricao VARCHAR(254)
 );
 
 CREATE TABLE IF NOT EXISTS sessao (
@@ -16,6 +16,6 @@ CREATE TABLE IF NOT EXISTS sessao (
 CREATE TYPE tipo_voto AS ENUM ('SIM', 'NAO');
 CREATE TABLE IF NOT EXISTS voto (
     sessao_id BIGINT REFERENCES sessao(id) NOT NULL,
-    associado_id BIGINT,
-    valor tipo_voto
+    associado_id BIGINT NOT NULL,
+    valor tipo_voto NOT NULL
 );
