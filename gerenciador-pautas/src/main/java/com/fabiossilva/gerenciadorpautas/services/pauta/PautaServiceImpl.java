@@ -3,6 +3,7 @@ package com.fabiossilva.gerenciadorpautas.services.pauta;
 import com.fabiossilva.gerenciadorpautas.constants.ApplicationConsts;
 import com.fabiossilva.gerenciadorpautas.constants.TelaConsts;
 import com.fabiossilva.gerenciadorpautas.entities.Pauta;
+import com.fabiossilva.gerenciadorpautas.models.PautaDTO;
 import com.fabiossilva.gerenciadorpautas.models.tela.ItensTelaSelecao;
 import com.fabiossilva.gerenciadorpautas.models.tela.SelecaoTelaDTO;
 import com.fabiossilva.gerenciadorpautas.repositories.PautaRepository;
@@ -38,6 +39,13 @@ public class PautaServiceImpl implements PautaService {
         return selecaoTela;
     }
 
+    @Override
+    public PautaDTO salvarPauta(PautaDTO pautaDTO) {
+        var p = pautaRepository.saveAndFlush(buildNovaPauta(pautaDTO));
+        pautaDTO.setId(p.getId());
+        return pautaDTO;
+    }
+
     private List<ItensTelaSelecao> buildItensPauta(List<Pauta> pautas) {
         var itens = new ArrayList<ItensTelaSelecao>();
         if (pautas != null) {
@@ -47,6 +55,14 @@ public class PautaServiceImpl implements PautaService {
             });
         }
         return itens;
+    }
+
+    private Pauta buildNovaPauta(PautaDTO pautaDTO) {
+        var p = new Pauta();
+        p.setNome(pautaDTO.getNome());
+        p.setAssociadoId(pautaDTO.getAssociadoId());
+        p.setDescricao(pautaDTO.getDescricao());
+        return p;
     }
 
 }

@@ -71,4 +71,6 @@ class PautaServiceImplTest {
         //
         Assertions.assertTrue(selecaoTelaDTO.getItens().isEmpty());
     }
+
+    
 }
