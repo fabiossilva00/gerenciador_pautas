@@ -23,6 +23,13 @@ public class Pauta {
     public Pauta() {
     }
 
+    public Pauta(Long id, Long associadoId, String nome, String descricao) {
+        this.id = id;
+        this.associadoId = associadoId;
+        this.nome = nome;
+        this.descricao = descricao;
+    }
+
     public Long getId() {
         return id;
     }

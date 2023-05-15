@@ -3,7 +3,7 @@ package com.fabiossilva.gerenciadorpautas.models.tela;
 import java.util.List;
 import java.util.Objects;
 
-public class TelaDTO<T> {
+public abstract class TelaDTO<T> {
     private TipoTela tipoTela;
     private String titulo;
     private List<T> itens;

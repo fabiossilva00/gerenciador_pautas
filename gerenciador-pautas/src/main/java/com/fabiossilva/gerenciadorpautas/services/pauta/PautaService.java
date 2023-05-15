@@ -6,8 +6,10 @@ import com.fabiossilva.gerenciadorpautas.models.tela.SelecaoTelaDTO;
 import java.util.List;
 
 public interface PautaService {
-    
+
     List<Pauta> findAll();
 
     SelecaoTelaDTO criaTelaPautaDTO();
+
+    
 }

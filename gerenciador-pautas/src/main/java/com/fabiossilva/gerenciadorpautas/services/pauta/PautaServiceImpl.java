@@ -16,11 +16,14 @@ import java.util.List;
 @Service
 public class PautaServiceImpl implements PautaService {
 
-    @Autowired
-    private ApplicationUtils appUtils;
+    private final ApplicationUtils appUtils;
+    private final PautaRepository pautaRepository;
 
     @Autowired
-    private PautaRepository pautaRepository;
+    public PautaServiceImpl(ApplicationUtils appUtils, PautaRepository pautaRepository) {
+        this.appUtils = appUtils;
+        this.pautaRepository = pautaRepository;
+    }
 
     @Override
     public List<Pauta> findAll() {
@@ -37,12 +40,13 @@ public class PautaServiceImpl implements PautaService {
 
     private List<ItensTelaSelecao> buildItensPauta(List<Pauta> pautas) {
         var itens = new ArrayList<ItensTelaSelecao>();
-        pautas.stream().forEach(p -> {
-            String url = appUtils.buildUrlBotao(ApplicationConsts.PATH_PAUTA) + p.getId();
-            itens.add(new ItensTelaSelecao(p.getNome(), url));
-        });
+        if (pautas != null) {
+            pautas.forEach(p -> {
+                String url = appUtils.buildUrlBotao(ApplicationConsts.PATH_PAUTA) + p.getId();
+                itens.add(new ItensTelaSelecao(p.getNome(), url));
+            });
+        }
         return itens;
     }
-
 
 }
