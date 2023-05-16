@@ -7,6 +7,7 @@ import com.fabiossilva.gerenciadorpautas.exceptions.SessaoException;
 import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
 import com.fabiossilva.gerenciadorpautas.models.VotoDTO;
 import com.fabiossilva.gerenciadorpautas.repositories.VotoRepository;
+import com.fabiossilva.gerenciadorpautas.services.UserInfoService;
 import com.fabiossilva.gerenciadorpautas.services.sessao.SessaoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,13 +32,16 @@ class VotoServiceImplTest {
     @Mock
     private SessaoService sessaoService;
 
+    @Mock
+    private UserInfoService userInfoService;
+
     VotoServiceImplTest() {
     }
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.votoService = new VotoServiceImpl(votoRepository, sessaoService);
+        this.votoService = new VotoServiceImpl(votoRepository, sessaoService, userInfoService);
         this.votoDTO = new VotoDTO(1L, TipoVoto.SIM, "25541538092");
         this.sessao = buildSessao();
     }

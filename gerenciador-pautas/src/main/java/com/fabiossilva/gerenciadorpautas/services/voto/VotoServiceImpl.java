@@ -3,11 +3,14 @@ package com.fabiossilva.gerenciadorpautas.services.voto;
 import com.fabiossilva.gerenciadorpautas.entities.Sessao;
 import com.fabiossilva.gerenciadorpautas.entities.votos.Voto;
 import com.fabiossilva.gerenciadorpautas.entities.votos.VotoPK;
+import com.fabiossilva.gerenciadorpautas.exceptions.BusinessException;
 import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
 import com.fabiossilva.gerenciadorpautas.exceptions.SessaoException;
+import com.fabiossilva.gerenciadorpautas.models.StatusCpfDTO;
 import com.fabiossilva.gerenciadorpautas.models.VotoDTO;
 import com.fabiossilva.gerenciadorpautas.models.errors.ErrorResponse;
 import com.fabiossilva.gerenciadorpautas.repositories.VotoRepository;
+import com.fabiossilva.gerenciadorpautas.services.UserInfoService;
 import com.fabiossilva.gerenciadorpautas.services.sessao.SessaoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -27,10 +30,13 @@ public class VotoServiceImpl implements VotoService {
     private final VotoRepository votoRepository;
     private final SessaoService sessaoService;
 
+    private final UserInfoService userInfoService;
+
     @Autowired
-    public VotoServiceImpl(VotoRepository votoRepository, SessaoService sessaoService) {
+    public VotoServiceImpl(VotoRepository votoRepository, SessaoService sessaoService, UserInfoService userInfoService) {
         this.votoRepository = votoRepository;
         this.sessaoService = sessaoService;
+        this.userInfoService = userInfoService;
     }
 
     @Override
@@ -42,7 +48,19 @@ public class VotoServiceImpl implements VotoService {
             final var error = new ErrorResponse("Sessão não encontrada", Map.of("idSessao", "ID da sessão incorreto"));
             throw new NotFoundException("Sessão não encontrada", error);
         }
+        
         final Sessao sessao = sessaoOptional.get();
+
+        try {
+            final StatusCpfDTO statusCpfDTO = userInfoService.checkCPFVoto(votoDTO.getCpf());
+            if (!statusCpfDTO.getStatus().verificaStatus()) {
+                final var error = new ErrorResponse("CPF não habilitado para voto", Map.of("cpf", "inválido para votação"));
+                throw new BusinessException("CPF não habilitado para voto", error);
+            }
+        } catch (NotFoundException ex) {
+            final var error = new ErrorResponse("CPF inválido", Map.of("cpf", "inválido"));
+            throw new BusinessException("CPF inválido", error);
+        }
 
         if (votoRepository.existsByIdSessaoIdAndIdCpf(sessao, votoDTO.getCpf())) {
             logger.info("voto na sessao {} com o mesmo CPF ", sessao.getId());
