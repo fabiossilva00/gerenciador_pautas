@@ -1,4 +1,4 @@
-package com.fabiossilva.gerenciadorpautas.models.errors.exceptions;
+package com.fabiossilva.gerenciadorpautas.exceptions;
 
 import com.fabiossilva.gerenciadorpautas.models.errors.ErrorResponse;
 import org.springframework.http.HttpHeaders;

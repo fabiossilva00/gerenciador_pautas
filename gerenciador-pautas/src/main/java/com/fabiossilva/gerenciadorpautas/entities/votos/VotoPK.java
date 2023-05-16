@@ -1,7 +1,11 @@
-package com.fabiossilva.gerenciadorpautas.entities;
+package com.fabiossilva.gerenciadorpautas.entities.votos;
 
+import com.fabiossilva.gerenciadorpautas.entities.Sessao;
 import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+
+import java.util.Objects;
 
 @Embeddable
 public class VotoPK {
@@ -9,8 +13,9 @@ public class VotoPK {
     @JoinColumn(name = "sessao_id")
     private Sessao sessao;
 
-    @Column(name = "associado_id")
-    private Long associadoId;
+    @Column(name = "cpf")
+    @Size(max = 11, min = 11)
+    private String cpf;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "valor")
@@ -24,12 +29,12 @@ public class VotoPK {
         this.sessao = sessao;
     }
 
-    public Long getAssociadoId() {
-        return associadoId;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setAssociadoId(Long associadoId) {
-        this.associadoId = associadoId;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public TipoVoto getValor() {
@@ -47,25 +52,25 @@ public class VotoPK {
 
         VotoPK votoPK = (VotoPK) o;
 
-        if (!sessao.equals(votoPK.sessao)) return false;
-        if (!associadoId.equals(votoPK.associadoId)) return false;
+        if (!Objects.equals(sessao, votoPK.sessao)) return false;
+        if (!Objects.equals(cpf, votoPK.cpf)) return false;
         return valor == votoPK.valor;
     }
 
     @Override
     public int hashCode() {
-        int result = sessao.hashCode();
-        result = 31 * result + associadoId.hashCode();
-        result = 31 * result + valor.hashCode();
+        int result = sessao != null ? sessao.hashCode() : 0;
+        result = 31 * result + (cpf != null ? cpf.hashCode() : 0);
+        result = 31 * result + (valor != null ? valor.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "VotoPK{" +
-                "session=" + sessao +
-                ", associadoId=" + associadoId +
-                ", value=" + valor +
+                "sessao=" + sessao +
+                ", cpf='" + cpf + '\'' +
+                ", valor=" + valor +
                 '}';
     }
 }

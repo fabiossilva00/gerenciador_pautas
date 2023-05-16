@@ -45,7 +45,7 @@ class PautaControllerTest {
 
     @Test
     void telaSelecaoPauta_Status200() throws Exception {
-        var telaPauta = new SelecaoTelaDTO(TelaConsts.tituloPauta);
+        final var telaPauta = new SelecaoTelaDTO(TelaConsts.tituloPauta);
         when(pautaService.criaTelaPautaDTO()).thenReturn(telaPauta);
         mockMvc.perform(get("/v1/pauta/tela")
                         .accept(MediaType.APPLICATION_JSON))
@@ -71,8 +71,8 @@ class PautaControllerTest {
 
     @Test
     void criarPauta_Status200() throws Exception {
-        var pauta = new PautaDTO(1L, 1L, "Teste Pauta", null);
-        var pautaRequest = new PautaDTO();
+        final var pauta = new PautaDTO(1L, 1L, "Teste Pauta", null);
+        final var pautaRequest = new PautaDTO();
         pautaRequest.setNome("Teste Pauta");
         pautaRequest.setAssociadoId(1L);
         when(pautaService.salvarPauta(any(PautaDTO.class))).thenReturn(pauta);

@@ -1,8 +1,11 @@
 package com.fabiossilva.gerenciadorpautas.entities;
 
+import com.fabiossilva.gerenciadorpautas.entities.votos.VotosJSONB;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLJsonbJdbcType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,18 +15,26 @@ public class Sessao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pauta_id")
     private Pauta pauta;
 
+    @NotNull
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "closed")
-    private Boolean closed;
+    private Boolean closed = false;
 
+    @NotNull
     @Column(name = "ends_in")
-    private LocalDateTime ends_in;
+    private LocalDateTime endsIn;
+
+    @Lob
+    @JdbcType(PostgreSQLJsonbJdbcType.class)
+    @Column(name = "votos", columnDefinition = "jsonb")
+    private VotosJSONB votos;
 
     public Sessao() {
     }
@@ -44,12 +55,12 @@ public class Sessao {
         this.pauta = pauta;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Boolean getClosed() {
@@ -60,12 +71,20 @@ public class Sessao {
         this.closed = closed;
     }
 
-    public LocalDateTime getEnds_in() {
-        return ends_in;
+    public LocalDateTime getEndsIn() {
+        return endsIn;
     }
 
-    public void setEnds_in(LocalDateTime ends_in) {
-        this.ends_in = ends_in;
+    public void setEndsIn(LocalDateTime endsIn) {
+        this.endsIn = endsIn;
+    }
+
+    public VotosJSONB getVotos() {
+        return votos;
+    }
+
+    public void setVotos(VotosJSONB votos) {
+        this.votos = votos;
     }
 
     @Override
@@ -77,14 +96,14 @@ public class Sessao {
 
         if (!id.equals(sessao.id)) return false;
         if (!pauta.equals(sessao.pauta)) return false;
-        return created_at.equals(sessao.created_at);
+        return createdAt.equals(sessao.createdAt);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + pauta.hashCode();
-        result = 31 * result + created_at.hashCode();
+        result = 31 * result + createdAt.hashCode();
         return result;
     }
 
@@ -93,9 +112,10 @@ public class Sessao {
         return "Sessao{" +
                 "id=" + id +
                 ", pauta=" + pauta +
-                ", created_at=" + created_at +
+                ", createdAt=" + createdAt +
                 ", closed=" + closed +
-                ", ends_in=" + ends_in +
+                ", endsIn=" + endsIn +
+                ", votos=" + votos +
                 '}';
     }
 }

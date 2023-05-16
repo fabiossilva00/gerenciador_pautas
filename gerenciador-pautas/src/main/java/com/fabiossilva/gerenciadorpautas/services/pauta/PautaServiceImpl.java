@@ -2,12 +2,15 @@ package com.fabiossilva.gerenciadorpautas.services.pauta;
 
 import com.fabiossilva.gerenciadorpautas.constants.ApplicationConsts;
 import com.fabiossilva.gerenciadorpautas.constants.TelaConsts;
+import com.fabiossilva.gerenciadorpautas.controllers.SessaoController;
 import com.fabiossilva.gerenciadorpautas.entities.Pauta;
 import com.fabiossilva.gerenciadorpautas.models.PautaDTO;
 import com.fabiossilva.gerenciadorpautas.models.tela.ItensTelaSelecao;
 import com.fabiossilva.gerenciadorpautas.models.tela.SelecaoTelaDTO;
 import com.fabiossilva.gerenciadorpautas.repositories.PautaRepository;
 import com.fabiossilva.gerenciadorpautas.utils.ApplicationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ import java.util.List;
 
 @Service
 public class PautaServiceImpl implements PautaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SessaoController.class);
 
     private final ApplicationUtils appUtils;
     private final PautaRepository pautaRepository;
@@ -33,21 +38,22 @@ public class PautaServiceImpl implements PautaService {
 
     @Override
     public SelecaoTelaDTO criaTelaPautaDTO() {
-        List<Pauta> pautas = findAll();
-        var selecaoTela = new SelecaoTelaDTO(TelaConsts.tituloPauta);
+        final List<Pauta> pautas = findAll();
+        final var selecaoTela = new SelecaoTelaDTO(TelaConsts.tituloPauta);
         selecaoTela.setItens(buildItensPauta(pautas));
         return selecaoTela;
     }
 
     @Override
     public PautaDTO salvarPauta(PautaDTO pautaDTO) {
-        var p = pautaRepository.saveAndFlush(buildNovaPauta(pautaDTO));
+        final var p = pautaRepository.saveAndFlush(buildNovaPauta(pautaDTO));
+        logger.info("pauta criada com id: {}", p.getId());
         pautaDTO.setId(p.getId());
         return pautaDTO;
     }
 
     private List<ItensTelaSelecao> buildItensPauta(List<Pauta> pautas) {
-        var itens = new ArrayList<ItensTelaSelecao>();
+        final var itens = new ArrayList<ItensTelaSelecao>();
         if (pautas != null) {
             pautas.forEach(p -> {
                 String url = appUtils.buildUrlBotao(ApplicationConsts.PATH_PAUTA) + p.getId();
@@ -58,7 +64,7 @@ public class PautaServiceImpl implements PautaService {
     }
 
     private Pauta buildNovaPauta(PautaDTO pautaDTO) {
-        var p = new Pauta();
+        final var p = new Pauta();
         p.setNome(pautaDTO.getNome());
         p.setAssociadoId(pautaDTO.getAssociadoId());
         p.setDescricao(pautaDTO.getDescricao());
