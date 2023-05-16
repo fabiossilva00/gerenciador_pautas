@@ -14,9 +14,8 @@ CREATE TABLE IF NOT EXISTS sessao (
     votos JSONB
 );
 
-CREATE TYPE tipo_voto AS ENUM ('SIM', 'NAO');
 CREATE TABLE IF NOT EXISTS voto (
     sessao_id BIGINT REFERENCES sessao(id) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
-    valor tipo_voto NOT NULL
+    valor VARCHAR(3) NOT NULL
 );
