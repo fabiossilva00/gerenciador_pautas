@@ -1,6 +1,6 @@
 package com.fabiossilva.gerenciadorpautas.controllers;
 
-import com.fabiossilva.gerenciadorpautas.exceptions.GenericException;
+import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
 import com.fabiossilva.gerenciadorpautas.models.SessaoDTO;
 import com.fabiossilva.gerenciadorpautas.services.sessao.SessaoService;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class SessaoController {
             logger.info("criando sessao");
             final SessaoDTO sessao = sessaoService.criarSessaoVotacao(sessaoDTO);
             return new ResponseEntity<>(sessao, HttpStatus.CREATED);
-        } catch (GenericException ex) {
+        } catch (NotFoundException ex) {
             return ResponseEntity.unprocessableEntity().body(ex.getErrorResponse());
         }
     }

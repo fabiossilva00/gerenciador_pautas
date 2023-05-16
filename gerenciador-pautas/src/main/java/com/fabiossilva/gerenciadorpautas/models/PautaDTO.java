@@ -6,14 +6,16 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
+import static com.fabiossilva.gerenciadorpautas.constants.ApplicationConsts.MESSAGEM_ERRO_NULOVAZIO;
+
 public class PautaDTO {
     private Long id;
 
-    @NotNull(message = "Não pode ser vazio ou nulo")
+    @NotNull(message = MESSAGEM_ERRO_NULOVAZIO)
     private Long associadoId;
 
-    @NotNull(message = "Não pode ser vazio ou nulo")
-    @NotBlank(message = "Não pode ser vazio ou nulo")
+    @NotNull(message = MESSAGEM_ERRO_NULOVAZIO)
+    @NotBlank(message = MESSAGEM_ERRO_NULOVAZIO)
     @Size(min = 3, max = 50, message = "Não pode menos que 3 caracteres e mais de 50 caracteres")
     private String nome;
 

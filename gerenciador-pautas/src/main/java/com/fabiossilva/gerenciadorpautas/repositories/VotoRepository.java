@@ -1,5 +1,6 @@
 package com.fabiossilva.gerenciadorpautas.repositories;
 
+import com.fabiossilva.gerenciadorpautas.entities.Sessao;
 import com.fabiossilva.gerenciadorpautas.entities.votos.Voto;
 import com.fabiossilva.gerenciadorpautas.entities.votos.VotoPK;
 import com.fabiossilva.gerenciadorpautas.entities.votos.VotosCount;
@@ -15,4 +16,7 @@ public interface VotoRepository extends JpaRepository<Voto, VotoPK> {
 
     @Query(value = "SELECT valor, COUNT(*) FROM voto WHERE sessao_id = :sessaoId GROUP BY valor", nativeQuery = true)
     List<VotosCount> countVotosPorSessao(@Param("sessaoId") Long sessaoId);
+
+    Boolean existsByIdSessaoIdAndIdCpf(Sessao sessao, String cpf);
+
 }

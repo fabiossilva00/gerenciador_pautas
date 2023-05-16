@@ -1,8 +1,11 @@
 package com.fabiossilva.gerenciadorpautas.entities.votos;
 
+import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
+import jakarta.validation.constraints.NotNull;
+
 public class VotosJSONB {
-    private int SIM;
-    private int NAO;
+    private int SIM = 0;
+    private int NAO = 0;
 
     public VotosJSONB() {
     }
@@ -26,6 +29,14 @@ public class VotosJSONB {
 
     public void setNAO(int NAO) {
         this.NAO = NAO;
+    }
+
+    public void votar(@NotNull TipoVoto voto) {
+        if (voto.equals(TipoVoto.SIM)) {
+            SIM += 1;
+        } else {
+            NAO += 1;
+        }
     }
 
     @Override

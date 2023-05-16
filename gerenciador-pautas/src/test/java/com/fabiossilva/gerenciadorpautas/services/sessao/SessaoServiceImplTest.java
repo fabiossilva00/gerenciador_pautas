@@ -3,7 +3,10 @@ package com.fabiossilva.gerenciadorpautas.services.sessao;
 import com.fabiossilva.gerenciadorpautas.entities.Pauta;
 import com.fabiossilva.gerenciadorpautas.entities.Sessao;
 import com.fabiossilva.gerenciadorpautas.exceptions.GenericException;
+import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
+import com.fabiossilva.gerenciadorpautas.exceptions.SessaoException;
 import com.fabiossilva.gerenciadorpautas.models.SessaoDTO;
+import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
 import com.fabiossilva.gerenciadorpautas.repositories.PautaRepository;
 import com.fabiossilva.gerenciadorpautas.repositories.SessaoRepository;
 import com.fabiossilva.gerenciadorpautas.repositories.VotoRepository;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class SessaoServiceImplTest {
@@ -115,5 +119,35 @@ class SessaoServiceImplTest {
         Assertions.assertEquals(1L, sessaoDTO.getId());
         Assertions.assertEquals(1, sessaoDTO.getTempoEmAberto());
     }
-    
+
+    @Test
+    void inserirVotosNaSessao_SessaoNaoEncontrada() {
+        when(sessaoRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+        final var sessao = new Sessao();
+        sessao.setId(1L);
+
+        Assertions.assertThrows(NotFoundException.class, () -> sessaoService.inserirVotosNaSessao(sessao, any(TipoVoto.class)));
+    }
+
+    @Test
+    void inserirVotosNaSessao_SessaoFechada() {
+        final var sessao = new Sessao();
+        sessao.setId(1L);
+        sessao.setClosed(true);
+        when(sessaoRepository.findById(any(Long.class))).thenReturn(Optional.of(sessao));
+
+        Assertions.assertThrows(SessaoException.class, () -> sessaoService.inserirVotosNaSessao(sessao, any(TipoVoto.class)));
+    }
+
+    @Test
+    void inserirVotosNaSessao() {
+        final var sessao = new Sessao();
+        sessao.setId(1L);
+        sessao.setClosed(false);
+        when(sessaoRepository.findById(any(Long.class))).thenReturn(Optional.of(sessao));
+        sessaoService.inserirVotosNaSessao(sessao, TipoVoto.SIM);
+        verify(sessaoRepository).saveAndFlush(any(Sessao.class));
+    }
+
+
 }

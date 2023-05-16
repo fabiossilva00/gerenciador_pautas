@@ -34,7 +34,7 @@ public class Sessao {
     @Lob
     @JdbcType(PostgreSQLJsonbJdbcType.class)
     @Column(name = "votos", columnDefinition = "jsonb")
-    private VotosJSONB votos;
+    private VotosJSONB votos = new VotosJSONB();
 
     public Sessao() {
     }

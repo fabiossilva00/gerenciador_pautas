@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static com.fabiossilva.gerenciadorpautas.constants.ApplicationConsts.MESSAGEM_ERRO_NULOVAZIO;
+
 public class SessaoDTO {
     private Long id;
 
-    @NotNull(message = "Não pode ser vazio ou nulo")
+    @NotNull(message = MESSAGEM_ERRO_NULOVAZIO)
     private Long idPauta;
 
     private LocalDateTime criadoEm;

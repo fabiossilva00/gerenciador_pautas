@@ -1,13 +1,35 @@
 package com.fabiossilva.gerenciadorpautas.controllers;
 
+import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
+import com.fabiossilva.gerenciadorpautas.exceptions.SessaoException;
+import com.fabiossilva.gerenciadorpautas.models.VotoDTO;
+import com.fabiossilva.gerenciadorpautas.services.voto.VotoService;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/voto")
+@RequestMapping("/v1/voto")
 public class VotoController {
+
+    private static final Logger logger = LoggerFactory.getLogger(VotoController.class);
+
+    @Autowired
+    private VotoService votoService;
+
+    @PostMapping()
+    public ResponseEntity votar(@Valid @RequestBody VotoDTO votoDTO) {
+        try {
+            logger.info("iniciando votação");
+            votoService.votarNaSessao(votoDTO);
+            return ResponseEntity.ok().build();
+        } catch (NotFoundException | SessaoException ex) {
+            return ResponseEntity.unprocessableEntity().body(ex.getErrorResponse());
+        }
+    }
 
     @GetMapping("/health")
     public ResponseEntity<String> health() {

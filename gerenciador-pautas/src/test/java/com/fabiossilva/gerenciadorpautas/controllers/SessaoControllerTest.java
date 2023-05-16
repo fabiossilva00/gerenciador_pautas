@@ -1,6 +1,6 @@
 package com.fabiossilva.gerenciadorpautas.controllers;
 
-import com.fabiossilva.gerenciadorpautas.exceptions.GenericException;
+import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
 import com.fabiossilva.gerenciadorpautas.models.SessaoDTO;
 import com.fabiossilva.gerenciadorpautas.models.errors.ErrorResponse;
 import com.fabiossilva.gerenciadorpautas.services.sessao.SessaoService;
@@ -67,7 +67,7 @@ class SessaoControllerTest {
         final var sessaoDTO = new SessaoDTO();
         sessaoDTO.setIdPauta(1L);
         final var error = new ErrorResponse("Pauta não encontrada", Map.of("idPauta", "ID de pauta incorreto"));
-        final var pautaNãoEncontrada = new GenericException("Pauta não encontrada", error);
+        final var pautaNãoEncontrada = new NotFoundException("Pauta não encontrada", error);
         when(sessaoService.criarSessaoVotacao(any(SessaoDTO.class))).thenThrow(pautaNãoEncontrada);
 
         mockMvc.perform(post("/v1/sessao")

@@ -4,7 +4,8 @@ import com.fabiossilva.gerenciadorpautas.entities.Pauta;
 import com.fabiossilva.gerenciadorpautas.entities.Sessao;
 import com.fabiossilva.gerenciadorpautas.entities.votos.VotosCount;
 import com.fabiossilva.gerenciadorpautas.entities.votos.VotosJSONB;
-import com.fabiossilva.gerenciadorpautas.exceptions.GenericException;
+import com.fabiossilva.gerenciadorpautas.exceptions.NotFoundException;
+import com.fabiossilva.gerenciadorpautas.exceptions.SessaoException;
 import com.fabiossilva.gerenciadorpautas.models.SessaoDTO;
 import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
 import com.fabiossilva.gerenciadorpautas.models.errors.ErrorResponse;
@@ -42,12 +43,12 @@ public class SessaoServiceImpl implements SessaoService {
     }
 
     @Override
-    public SessaoDTO criarSessaoVotacao(@NotNull SessaoDTO sessaoDTO) throws GenericException {
+    public SessaoDTO criarSessaoVotacao(@NotNull SessaoDTO sessaoDTO) throws NotFoundException {
         final Optional<Pauta> optionalPauta = pautaRepository.findById(sessaoDTO.getIdPauta());
         if (!optionalPauta.isPresent()) {
             logger.info("pauta não encontrada com id: {}", sessaoDTO.getIdPauta());
             final var error = new ErrorResponse("Pauta não encontrada", Map.of("idPauta", "ID de pauta incorreto"));
-            throw new GenericException("Pauta não encontrada", error);
+            throw new NotFoundException("Pauta não encontrada", error);
         }
 
         logger.info("criando sessao - {}", sessaoDTO);
@@ -67,6 +68,33 @@ public class SessaoServiceImpl implements SessaoService {
         return buildSessaoDTOResponse(sessaoNew);
     }
 
+    @Override
+    public void inserirVotosNaSessao(@NotNull Sessao sessao, TipoVoto voto) throws NotFoundException, SessaoException {
+        final Optional<Sessao> sessaoOptional = sessaoRepository.findById(sessao.getId());
+        if (!sessaoOptional.isPresent()) {
+            final var error = new ErrorResponse("Sessão não encontrada", Map.of("idSessao", "ID da sessão incorreto"));
+            throw new NotFoundException("Sessão não encontrada", error);
+        }
+
+        final Sessao sessaoUpdate = sessaoOptional.get();
+        if (sessaoUpdate.getClosed()) {
+            final var error = new ErrorResponse("Sessão de votos já encerrado", Map.of("idSessao", "ID da sessão incorreto"));
+            throw new SessaoException("Sessão de votos já encerrado", error);
+        }
+
+        sessaoUpdate.getVotos().votar(voto);
+        sessaoRepository.saveAndFlush(sessaoUpdate);
+        logger.info("sessao atualizada com sucesso");
+    }
+
+    @Override
+    public Optional<Sessao> findById(@NotNull Long idSessao) {
+        if (idSessao == null) {
+            return Optional.empty();
+        }
+        return sessaoRepository.findById(idSessao);
+    }
+
     private SessaoDTO buildSessaoDTOResponse(@NotNull Sessao sessao) {
         final var sessaoDTO = new SessaoDTO();
         sessaoDTO.setId(sessao.getId());
@@ -81,7 +109,7 @@ public class SessaoServiceImpl implements SessaoService {
 
     @Transactional
     @Scheduled(cron = "0 */1 * * * *")
-    private void fechaSessoesEmAberto() {
+    protected void fechaSessoesEmAberto() {
         logger.info("EXECUTANDO CRON - FECHAR SESSOES EM ABERTO");
         final List<Sessao> sessoes = sessaoRepository.findAllByClosedAndEndsInLessThan(false, LocalDateTime.now());
         sessoes.stream().parallel().forEach(s -> {
