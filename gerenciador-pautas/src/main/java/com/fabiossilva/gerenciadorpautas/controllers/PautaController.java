@@ -20,9 +20,9 @@ public class PautaController {
     @Autowired
     private PautaService pautaService;
 
-    @GetMapping(value = "/tela")
+    @GetMapping(value = "/tela/selecao")
     public ResponseEntity<SelecaoTelaDTO> telaSelecaoPauta() {
-        final SelecaoTelaDTO t = pautaService.criaTelaPautaDTO();
+        final SelecaoTelaDTO t = pautaService.criaTelaSelecaoPautaDTO();
         return ResponseEntity.ok(t);
     }
 

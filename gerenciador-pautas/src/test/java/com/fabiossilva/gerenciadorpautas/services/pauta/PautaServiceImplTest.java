@@ -46,7 +46,7 @@ class PautaServiceImplTest {
         List<ItensTelaSelecao> itensTela = Arrays.asList(new ItensTelaSelecao("Teste Pauta", "url"));
 
         Mockito.when(pautaRepository.findAll()).thenReturn(pautas);
-        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaPautaDTO();
+        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaSelecaoPautaDTO();
 
         //Tipo Tela
         Assertions.assertEquals(TipoTela.SELECAO, selecaoTelaDTO.getTipoTela());
@@ -59,7 +59,7 @@ class PautaServiceImplTest {
     @Test
     void criaTelaPautaDTO_PautaVazio() {
         Mockito.when(pautaRepository.findAll()).thenReturn(new ArrayList<>());
-        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaPautaDTO();
+        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaSelecaoPautaDTO();
         //
         Assertions.assertTrue(selecaoTelaDTO.getItens().isEmpty());
     }
@@ -67,10 +67,10 @@ class PautaServiceImplTest {
     @Test
     void criaTelaPautaDTO_PautaNull() {
         Mockito.when(pautaRepository.findAll()).thenReturn(new ArrayList<>());
-        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaPautaDTO();
+        SelecaoTelaDTO selecaoTelaDTO = pautaService.criaTelaSelecaoPautaDTO();
         //
         Assertions.assertTrue(selecaoTelaDTO.getItens().isEmpty());
     }
 
-    
+
 }

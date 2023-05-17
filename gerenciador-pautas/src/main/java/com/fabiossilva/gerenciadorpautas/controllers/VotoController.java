@@ -20,6 +20,7 @@ public class VotoController {
     @Autowired
     private VotoService votoService;
 
+
     @PostMapping()
     public ResponseEntity votar(@Valid @RequestBody VotoDTO votoDTO) {
         try {

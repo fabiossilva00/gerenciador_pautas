@@ -37,7 +37,7 @@ public class VotoServiceImpl implements VotoService {
     @Transactional
     public void votarNaSessao(@NotNull VotoDTO votoDTO) throws NotFoundException, SessaoException {
         final Optional<Sessao> sessaoOptional = sessaoService.findById(votoDTO.getIdSessao());
-        if (!sessaoOptional.isPresent()) {
+        if (!sessaoOptional.isEmpty()) {
             logger.info("sessão não encontrada com id: {}", votoDTO.getIdSessao());
             final var error = new ErrorResponse("Sessão não encontrada", Map.of("idSessao", "ID da sessão incorreto"));
             throw new NotFoundException("Sessão não encontrada", error);
@@ -46,7 +46,8 @@ public class VotoServiceImpl implements VotoService {
 
         if (votoRepository.existsByIdSessaoIdAndIdCpf(sessao, votoDTO.getCpf())) {
             logger.info("voto na sessao {} com o mesmo CPF ", sessao.getId());
-            final var error = new ErrorResponse("CPF já votou na sessão", Map.of("cpf", "cpf existente com voto na sessão"));
+            final var error = new ErrorResponse("CPF já votou na sessão",
+                    Map.of("cpf", "cpf existente com voto na sessão"));
             throw new SessaoException("CPF já votou na sessão", error);
         }
 

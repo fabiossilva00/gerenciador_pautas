@@ -7,8 +7,8 @@ public class FormularioTelaDTO extends TelaDTO<ItensTelaFormulario> {
     private BotaoTela botaoOk;
     private BotaoTela botaoCancelar;
 
-    public FormularioTelaDTO(TipoTela tipoTela, String titulo) {
-        super(tipoTela, titulo);
+    public FormularioTelaDTO(String titulo) {
+        super(TipoTela.FORMULARIO, titulo);
     }
 
     public BotaoTela getBotaoOk() {

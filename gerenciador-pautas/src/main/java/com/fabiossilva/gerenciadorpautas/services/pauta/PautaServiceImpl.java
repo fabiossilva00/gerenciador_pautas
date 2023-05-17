@@ -5,6 +5,7 @@ import com.fabiossilva.gerenciadorpautas.constants.TelaConsts;
 import com.fabiossilva.gerenciadorpautas.controllers.SessaoController;
 import com.fabiossilva.gerenciadorpautas.entities.Pauta;
 import com.fabiossilva.gerenciadorpautas.models.PautaDTO;
+import com.fabiossilva.gerenciadorpautas.models.tela.ItensTelaFormulario;
 import com.fabiossilva.gerenciadorpautas.models.tela.ItensTelaSelecao;
 import com.fabiossilva.gerenciadorpautas.models.tela.SelecaoTelaDTO;
 import com.fabiossilva.gerenciadorpautas.repositories.PautaRepository;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +39,10 @@ public class PautaServiceImpl implements PautaService {
     }
 
     @Override
-    public SelecaoTelaDTO criaTelaPautaDTO() {
+    public SelecaoTelaDTO criaTelaSelecaoPautaDTO() {
         final List<Pauta> pautas = findAll();
         final var selecaoTela = new SelecaoTelaDTO(TelaConsts.tituloPauta);
-        selecaoTela.setItens(buildItensPauta(pautas));
+        selecaoTela.setItens(buildItensPautaSelecao(pautas));
         return selecaoTela;
     }
 
@@ -52,7 +54,7 @@ public class PautaServiceImpl implements PautaService {
         return pautaDTO;
     }
 
-    private List<ItensTelaSelecao> buildItensPauta(List<Pauta> pautas) {
+    private List<ItensTelaSelecao> buildItensPautaSelecao(List<Pauta> pautas) {
         final var itens = new ArrayList<ItensTelaSelecao>();
         if (pautas != null) {
             pautas.forEach(p -> {
@@ -60,6 +62,18 @@ public class PautaServiceImpl implements PautaService {
                 itens.add(new ItensTelaSelecao(p.getNome(), url));
             });
         }
+        return itens;
+    }
+
+    private List<ItensTelaFormulario> buildItensPautaFormulario() {
+        final var itens = new ArrayList<ItensTelaFormulario>();
+        final var pauta = new PautaDTO();
+
+        for (Field f : pauta.getClass().getFields()) {
+
+        }
+
+
         return itens;
     }
 

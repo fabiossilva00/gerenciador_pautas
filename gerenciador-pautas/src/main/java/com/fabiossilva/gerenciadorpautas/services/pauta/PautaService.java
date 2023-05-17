@@ -10,7 +10,7 @@ public interface PautaService {
 
     List<Pauta> findAll();
 
-    SelecaoTelaDTO criaTelaPautaDTO();
+    SelecaoTelaDTO criaTelaSelecaoPautaDTO();
 
     PautaDTO salvarPauta(PautaDTO pauta);
 }

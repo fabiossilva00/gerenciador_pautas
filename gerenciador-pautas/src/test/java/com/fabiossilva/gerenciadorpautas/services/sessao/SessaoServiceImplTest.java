@@ -10,6 +10,7 @@ import com.fabiossilva.gerenciadorpautas.models.TipoVoto;
 import com.fabiossilva.gerenciadorpautas.repositories.PautaRepository;
 import com.fabiossilva.gerenciadorpautas.repositories.SessaoRepository;
 import com.fabiossilva.gerenciadorpautas.repositories.VotoRepository;
+import com.fabiossilva.gerenciadorpautas.utils.ApplicationUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class SessaoServiceImplTest {
 
     private SessaoService sessaoService;
     @Mock
+    private ApplicationUtils appUtils;
+    @Mock
     private SessaoRepository sessaoRepository;
 
     @Mock
@@ -38,7 +41,7 @@ class SessaoServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.sessaoService = new SessaoServiceImpl(sessaoRepository, pautaRepository, votoRepository);
+        this.sessaoService = new SessaoServiceImpl(appUtils, sessaoRepository, pautaRepository, votoRepository);
     }
 
     @Test

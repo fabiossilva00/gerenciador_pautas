@@ -46,8 +46,8 @@ class PautaControllerTest {
     @Test
     void telaSelecaoPauta_Status200() throws Exception {
         final var telaPauta = new SelecaoTelaDTO(TelaConsts.tituloPauta);
-        when(pautaService.criaTelaPautaDTO()).thenReturn(telaPauta);
-        mockMvc.perform(get("/v1/pauta/tela")
+        when(pautaService.criaTelaSelecaoPautaDTO()).thenReturn(telaPauta);
+        mockMvc.perform(get("/v1/pauta/tela/selecao")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(print());
     }
