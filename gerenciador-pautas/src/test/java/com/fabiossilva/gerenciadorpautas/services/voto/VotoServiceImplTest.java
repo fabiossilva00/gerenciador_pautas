@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 class VotoServiceImplTest {
 
+    @MockBean
     private VotoService votoService;
     private VotoDTO votoDTO;
     private Sessao sessao;
@@ -54,7 +56,7 @@ class VotoServiceImplTest {
         when(sessaoService.findById(any(Long.class))).thenReturn(Optional.of(this.sessao));
         when(votoRepository.existsByIdSessaoIdAndIdCpf(any(Sessao.class), any(String.class))).thenReturn(true);
 
-        Assertions.assertThrows(NotFoundException.class, () -> votoService.votarNaSessao(votoDTO));
+        Assertions.assertThrows(SessaoException.class, () -> votoService.votarNaSessao(votoDTO));
     }
 
     @Test

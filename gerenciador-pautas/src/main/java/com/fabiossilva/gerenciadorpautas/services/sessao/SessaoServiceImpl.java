@@ -44,7 +44,7 @@ public class SessaoServiceImpl implements SessaoService {
 
     @Autowired
     public SessaoServiceImpl(ApplicationUtils appUtils, SessaoRepository sessaoRepository,
-                             PautaRepository pautaRepository, VotoRepository votoRepository) {
+            PautaRepository pautaRepository, VotoRepository votoRepository) {
         this.appUtils = appUtils;
         this.sessaoRepository = sessaoRepository;
         this.pautaRepository = pautaRepository;
@@ -62,7 +62,7 @@ public class SessaoServiceImpl implements SessaoService {
     @Override
     public SessaoDTO criarSessaoVotacao(@NotNull SessaoDTO sessaoDTO) throws NotFoundException {
         final Optional<Pauta> optionalPauta = pautaRepository.findById(sessaoDTO.getIdPauta());
-        if (!optionalPauta.isEmpty()) {
+        if (optionalPauta.isEmpty()) {
             logger.info("pauta não encontrada com id: {}", sessaoDTO.getIdPauta());
             final var error = new ErrorResponse("Pauta não encontrada", Map.of("idPauta", "ID de pauta incorreto"));
             throw new NotFoundException("Pauta não encontrada", error);
@@ -88,7 +88,7 @@ public class SessaoServiceImpl implements SessaoService {
     @Override
     public void inserirVotosNaSessao(@NotNull Sessao sessao, TipoVoto voto) throws NotFoundException, SessaoException {
         final Optional<Sessao> sessaoOptional = sessaoRepository.findById(sessao.getId());
-        if (!sessaoOptional.isEmpty()) {
+        if (sessaoOptional.isEmpty()) {
             final var error = new ErrorResponse("Sessão não encontrada", Map.of("idSessao", "ID da sessão incorreto"));
             throw new NotFoundException("Sessão não encontrada", error);
         }

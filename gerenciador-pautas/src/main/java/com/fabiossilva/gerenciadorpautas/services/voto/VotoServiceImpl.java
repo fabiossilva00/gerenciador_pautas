@@ -37,7 +37,7 @@ public class VotoServiceImpl implements VotoService {
     @Transactional
     public void votarNaSessao(@NotNull VotoDTO votoDTO) throws NotFoundException, SessaoException {
         final Optional<Sessao> sessaoOptional = sessaoService.findById(votoDTO.getIdSessao());
-        if (!sessaoOptional.isEmpty()) {
+        if (sessaoOptional.isEmpty()) {
             logger.info("sessão não encontrada com id: {}", votoDTO.getIdSessao());
             final var error = new ErrorResponse("Sessão não encontrada", Map.of("idSessao", "ID da sessão incorreto"));
             throw new NotFoundException("Sessão não encontrada", error);
