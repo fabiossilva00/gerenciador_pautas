@@ -26,11 +26,21 @@ ___
 
 ## Requisitos
  - Docker 
+Para executar testes localmente
+ - Maven 3.8+
+ - Java 17
+
 
 ## Executando
 
 Após baixar o repositório na pasta, entre na pasta raiz onde se encontram os arquivos docker-compose.yml e .env
+
 Execute 
 ```bash
 docker compose up
+```
+
+Caso queira executar somente os testes, entre na pasta o projeto Java e execute
+```bash
+mvn test
 ```
